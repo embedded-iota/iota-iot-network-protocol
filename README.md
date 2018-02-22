@@ -30,6 +30,10 @@ A NodeGroup is a group of Sensor- or PaymentNodes which fullfil the same purpose
 
 A NodeGroup Member is a Node within a NodeGroup.
 
+## NodeGroup Neighbor
+
+All other Nodes within a NodeGroup are the Nodes Neighbors.
+
 ##### Examples
 
 **Temperature sensors:** Temperature sensors within a given area. This could be a district of a city or postcode area. These sensors provide information which are equal from the outside perspective. (temperature of a given area)
@@ -56,13 +60,15 @@ Nodes can communicate peer to peer within their NodeGroup. Each node can also co
 
 A NodeGroup shares an IOTA seeds. They therefore share also their addresses.
 
-# Status calls
+# Status Request
 A Gateway asks every x seconds for the status of the NodeGroup. The answer of one or more Nodes contains the following information:
 - HealthStatus of every Member
 - Current used addresses
 - Prices of the services or sensor data
 - New added Member, if there were any between current status call and last one.
 
+# Address transactions
+A Gateway gets the current used addresses by one or more Members of a NodeGroup within its Status Requests. A Gateway subscribes to all known addresses and gets therefore all incoming transactions. The NodeGroup Member which is interested of an incoming transaction can request an addresses transactions since a specific milestone. The response contains all new transactions since the given milestone. It can request a Gateway and/or its NodeGroup Neighbors for this information. The Member which is intersted in an incoming transaction should use an timeout and should request the addresses transactions again, if it is still waiting for it.
 
 # Process of registration
 
