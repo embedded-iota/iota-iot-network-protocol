@@ -50,11 +50,18 @@ This specification prefers Content Centric Networking for routing purposes, but 
 
 ## Communication
 
-Nodes can communication peer to peer within their NodeGroup. Each node can also communicate to any Gateway. Nodes cannot talk to other Node outside of their NodeGroup.
+Nodes can communicate peer to peer within their NodeGroup. Each node can also communicate to any Gateway. Nodes cannot talk to other Node outside of their NodeGroup.
 
 ## IOT Seeds
 
 A NodeGroup shares an IOTA seeds. They therefore share also their addresses.
+
+# Status calls
+A Gateway asks every x seconds for the status of the NodeGroup. The answer of one or more Nodes contains the following information:
+- HealthStatus of every Member
+- Current used addresses
+- Prices of the services or sensor data
+- New added Member, if there were any between current status call and last one.
 
 
 # Process of registration
@@ -75,4 +82,6 @@ A new NodeGroup needs to be added to a Gateway. A new NodeGroup can not be creat
 ### Step 2
 A Gateway requests every x seconds a status of the NodeGroup. Since there is only one Member in the NodeGroup, this Member will answer with the current status.
 
+## Getting Sensor Data
+A Gateway keeps track of the prices of the sensor data.
 
