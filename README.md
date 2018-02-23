@@ -12,15 +12,19 @@ In sense of the CAP theorem this specification prefers availability and partion 
 
 ## Node
 
-A node is a embedded device which can be sensor- or payment-node. Node is the generic name for both.
+A Node is a embedded device which can be SensorNode or PaymentNode. Node is the generic name for both.
+
+## NodeClass
+
+The NodeClass can be SensorNode or PaymentNode.
 
 ## SensorNode
 
-A sensor node is a small embedded device which collect some data about the sourounding environment. This could be the temperature, as well as the traffic of a specific street.
+A SensorNode is a small embedded device which collect some data about the sourounding environment. This could be the temperature, as well as the traffic of a specific street.
 
 ## PaymentNode
 
-A payment node is a small embedded device which accepts IOTA payments and provides some service. This could be a car park barrier, as well as a snack automat.
+A PaymentNode is a small embedded device which accepts IOTA payments and provides some service. This could be a car park barrier, as well as a snack automat.
 
 ## NodeGroup
 
@@ -29,6 +33,14 @@ A NodeGroup is a group of Sensor- or PaymentNodes which fullfil the same purpose
 ## NodeGroup Member
 
 A NodeGroup Member is a Node within a NodeGroup.
+
+## SeedNode
+
+A SeedNode is a Node within a NodeGroup which holds the configuration for new NodeGroup Members. It is also responsible for collecting the status of the NodeGroup for a Gateway.
+
+## SeedType
+
+A SeedType can be SeedNode or empty.
 
 ## NodeGroup Neighbor
 
@@ -46,9 +58,6 @@ Each node has its own independent NodeID within a NodeGroup.
 
 A Gateway is a more powerful embedded device, which gives the nodes indirect access to the tangle.
 
-## SeedNode
-
-A SeedNode is a Node within a NodeGroup which holds the configuration for new NodeGroup Members. It is also responsible for collecting the status of the NodeGroup for a Gateway.
 
 ## Address Milestone
 
@@ -82,7 +91,7 @@ A Gateway gets the current used addresses by one or more SeedNode within its Sta
 
 # Process of registration
 
-## Add a new Member to an existing NodeGroup
+## Add a Member to an existing NodeGroup
 
 ### Step 1
 If a new Member gets added to an existing NodeGroup, it requests a list of all existing SeedNodes by a Gateway. It communicate to this given SeedNodes and gives them all necassary information to operate within the NodeGroup. One or more SeedNode responses with all necassary information for the new added NodeGroup Member, such as the NodeGroups Seed Key and active addresses.
