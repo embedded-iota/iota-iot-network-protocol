@@ -1,6 +1,8 @@
 # Specification for a network of nodes with IOTA as payment solution
 
-**Status of the project:** This repo contains rough specifications for a network of IOTA light wallet nodes.
+**Status of the project:**
+This repo contains rough specifications for a network of IOTA light wallet nodes.
+These specifications are work in progress. So they can change heavily over time.
 
 # Preconditions
 
@@ -41,9 +43,13 @@ A NodeGroup Member is a Node within a NodeGroup.
 
 A SeedNode is a Node within a NodeGroup which holds the configuration for new NodeGroup Members. It is also responsible for collecting the status of the NodeGroup for a Gateway.
 
+## WorkerNode
+
+A WorkerNode are all Members of a NodeGroup which are not SeedNodes.
+
 ## NodeType
 
-A NodeType can be SeedNode or empty.
+A NodeType can be SeedNode or WorkerNode.
 
 ## NodeGroup Neighbor
 
@@ -78,42 +84,59 @@ A NodeGroup Seed key is a shared Iota seed. Therefore every NodeGroup Member use
 
 Nodes can communicate peer to peer within their NodeGroup. Each node can also communicate to any Gateway. Nodes cannot talk to other Node outside of their NodeGroup.
 
+### Health Status Request
+
+A Gatway requests every x seconds the health status of a NodeGroup. If one Member doesn't respond, it forces the other Members to get the status of this Member. The Members will respond with their current status of this Member. If, at least, one Member responses with the status Healthy, the Member will not marked as Dead. Otherwise the Gatway tries this process x times with a timeout of x seconds. After x times, it marks the Member as Dead.
+
 ### Status Refresh Request
 A Gateway requests every x seconds the status of a NodeGroup by its SeedNode. These requests are called Status Refresh Requests.
 The response of one or more SeedNode contains the following information:
-- HealthStatus of every Member
 - Current used addresses
 - Prices of the services, sensor data or goods
 - New added Member, if there were any between current status call and last one.
 
 
 ### Address transactions
-A Gateway gets the current used addresses by one or more SeedNode within its Status Requests. A Gateway subscribes to all known addresses and gets therefore all incoming transactions. The Gateway caches these transactions, but doesn't forword them directly after they came in. The NodeGroup Member which is interested in an incoming transaction can request an addresses transactions since a specific Account Milestone. The response contains all new transactions since the given Address Milestone. It can request a Gateway and/or its NodeGroup Neighbors for this information. The Member which is intersted in an incoming transaction should use an timeout and should request the addresses transactions again, if it is still waiting for it. A NodeGroup Member is also able to force its NodeGroup Neighbors to forword its request to any available Gateway.
+A Gateway gets the current used addresses by one or more SeedNode within its Status Requests. A Gateway subscribes to all known addresses and gets therefore all incoming transactions. The Gateway caches these transactions, but doesn't forword them directly after they came in. The NodeGroup Member which is interested in an incoming transaction can request an addresses transactions since a specific Address Milestone. The response contains all new transactions since the given Address Milestone. The latest transaction gets the current Milestone. It can request a Gateway and/or its NodeGroup Neighbors for this information. The Member which is intersted in an incoming transaction should use an timeout and should request the addresses transactions again, if it is still waiting for it. A NodeGroup Member is also able to force its NodeGroup Neighbors to forword its request to any available Gateway. The Gateway or NodeGroup Neighbors response must contain the latest Address Milestone and all transactions between the provided Milestone and the latest. If the NodeGroup Member wasn't the initator of the request, it forwords the information to the NodeGroup Member which requested the transactions and updates his own transaction database.
+
+### SeedNode Gossip
+
+Every SeedNode requests the newest Gossip every x seconds from the other SeedNodes. All SeedNodes must respond to this request. The SeedNode Gossip Response contains the following information:
+- Latest known transactions since the last milestone.
+- Latest known milestone
+
+If a SeedNode is not responding within x seconds, the SeedNode will marked as Dead.
+
+### NodeGroup Gossip
+
+Every NodeGroup Member requests every x seconds for the newest Gossip. All NodeGroup Members must respond to this request. The NodeGroup Gossip contains the following information:
+- Latest known transactions since the last milestone.
+- Latest known milestone.
+
+If a Member is not responding within x seconds, the NodeGroup Member will marked a Dead.
 
 ### Node Registration
 
 #### Add a Member to an existing NodeGroup
 
-##### Step 1
-If a new Member gets added to an existing NodeGroup, it requests a list of all existing SeedNodes by a Gateway. It communicate to this given SeedNodes and gives them all necassary information to operate within the NodeGroup. One or more SeedNode responses with all necassary information for the new added NodeGroup Member, such as the NodeGroups Seed Key and active addresses.
+If a new Member gets added to an existing NodeGroup, it requests a list of all existing SeedNodes by a Gateway. It communicate to this given SeedNodes and gives them all necassary information to operate within the NodeGroup. All SeedNode responses with all necassary information for the new added NodeGroup Member, such as the NodeGroups Seed Key and active addresses. All SeedNodes must also response with a list of all existing Members of the NodeGroup.
 
-##### Step 2
-A Gateway gets the new added Member of the NodeGroup by a Status Refresh Request.
 
 #### Creation of a new NodeGroup
 
-##### Step 1
 A new NodeGroup needs to be added to a Gateway. A new NodeGroup can not be created by a Node itself. The first Member of a new created NodeGroup must be a SeedNode. The Member of the created NodeGroup can request a Gateway for initial configuration. A new Iota seed key will be generated by the Member itself, not a Gateway.
 
-##### Step 2
-A Gateway gets the new added Member of the NodeGroup by a Status Refresh Request.
+#### Add a new SeedNode
+
+Like the creation of a new NodeGroup, a SeedNode can only added to a NodeGroup through a Gateway. After adding a new SeedNode to a Gateway, the new added SeedNode must register itself to its NodeGroup Neighbor SeedNodes. It must provide all necessary information to operate within the NodeGroup. The already active SeedNodes which receiving the request of the new SeedNode will request a Gatway for the new NodeGroup NodeSeed list. They will check if the new SeedNode is valid. If the list doesn't contain the new SeedNode, they retry requesting the new SeedNode x times, with a timeout of x seconds. If the SeedNode is still not in the list, they will ignore all of the new SeedNodes requests.
+
+
+### Receiving new addresses
 
 
 ## Access Data, Services or Goods
 
-## Sensor Data Refresh Request
-A Gateway requests every x seconds the NodeGroups Sensor Data. These requests is called Sensor Data Refresh Requests.
+### Receiving Payments as PaymentNode
 
-## Getting Sensor Data
-A Gateway keeps track of the prices of the sensor data within its Status Refresh Requests. It only accepts incoming Sensor Data Requests with the correct price.
+
 
