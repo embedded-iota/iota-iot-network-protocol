@@ -41,9 +41,9 @@ A NodeGroup Member is a Node within a NodeGroup.
 
 A SeedNode is a Node within a NodeGroup which holds the configuration for new NodeGroup Members. It is also responsible for collecting the status of the NodeGroup for a Gateway.
 
-## SeedType
+## NodeType
 
-A SeedType can be SeedNode or empty.
+A NodeType can be SeedNode or empty.
 
 ## NodeGroup Neighbor
 
@@ -71,8 +71,8 @@ A Address Milestone is an ID for a given Iota address which will be set by a Gat
 A NodeGroup Seed key is a shared Iota seed. Therefore every NodeGroup Member uses the same seed on the tangle.
 
 
-# Function description
 
+# Function description
 
 ## Communication
 
