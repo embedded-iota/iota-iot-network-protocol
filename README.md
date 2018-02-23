@@ -24,7 +24,7 @@ A SensorNode is a small embedded device which collect some data about the sourou
 
 ## PaymentNode
 
-A PaymentNode is a small embedded device which accepts IOTA payments and provides some service. This could be a car park barrier, as well as a snack automat.
+A PaymentNode is a small embedded device which accepts IOTA payments and provides some service or goods. This could be a car park barrier, as well as a snack automat.
 
 ## NodeGroup
 
@@ -79,10 +79,11 @@ Nodes can communicate peer to peer within their NodeGroup. Each node can also co
 
 
 # Status Refresh Request
-A Gateway requests every x seconds the status of a NodeGroup by its SeedNode. The response of one or more SeedNode contains the following information:
+A Gateway requests every x seconds the status of a NodeGroup by its SeedNode. These requests are called Status Refresh Requests.
+The response of one or more SeedNode contains the following information:
 - HealthStatus of every Member
 - Current used addresses
-- Prices of the services or sensor data
+- Prices of the services, sensor data or goods
 - New added Member, if there were any between current status call and last one.
 
 
@@ -107,6 +108,11 @@ A new NodeGroup needs to be added to a Gateway. A new NodeGroup can not be creat
 ### Step 2
 A Gateway gets the new added Member of the NodeGroup by a Status Refresh Request.
 
+## Sensor Data Refresh Request
+A Gateway requests every x seconds the NodeGroups Sensor Data. These requests is called Sensor Data Refresh Requests.
+
+# Access Data, Services or Goods
+
 ## Getting Sensor Data
-A Gateway keeps track of the prices of the sensor data.
+A Gateway keeps track of the prices of the sensor data within its Status Refresh Requests. It only accepts incoming Sensor Data Requests with the correct price.
 
