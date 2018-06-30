@@ -328,6 +328,21 @@ MUST updates its own transaction database.
 
 The IOTA Gateway SHALL receive new IOTA Addresses by the Node Group Members.
 
+#### Promotion of an IOTA transaction
+
+The IOTA Gateway MUST take care of promoting an IOTA transactions created by a Node.
+
+### Reattachment of an IOTA transaction
+
+The IOTA Gateway MUST take care of reattaching an IOTA transaction created by a Node.
+
+### Proof of Work
+
+The IOTA Gateway MUST take care of the Proof of Work for an IOTA transaction created by a Node.
+
+### Trunk- & Branch-Transaction
+
+The IOTA Gateway MUST take care of picking the Trunk- & Branch-Transaction-Bundles.
 
 ### Access Data, Services or Goods
 
