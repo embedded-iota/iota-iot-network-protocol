@@ -23,7 +23,8 @@ This Specification is UNSTABLE. It SHALL not be used for production implementati
 ## Naming Convention
 
 The following naming convention SHALL be used in the implementation. 
-The naming conevention within the implementation MUST be CamelCase or Underscore _.
+The naming convention within the implementation MUST be CamelCase or Underscore _.
+
 
 ### Node
 
@@ -33,62 +34,72 @@ A Node MUST be one physical device. A Node SHOULD be an embedded device.
 
 ###### Node Class
 
-The Node Class MUST be a property on a Node and MUST be Sensor Node or Payment Node.
+The value SHALL be Sensor Node or Payment Node.
+Every Node MUST have a Node Class.
 
-###### NodeType
+###### Node Type
 
-A NodeType MUST be Seed Node or WorkerNode.
+The value SHALL be Seed Node or Worker Node.
+Every Node MUST have a Node Type.
 
 ###### Node ID
 
-Each Node MUST have its own independent Node ID within a Node Group.
+Each Node MUST have its own Node ID.
+The value of the Node ID SHALL be unique within a Node Group.
 
 #### Other
 
 ###### Sensor Node
 
-A Sensor Node SHOULD be a small embedded device which MUST collect some data about the sourounding environment.
+A Sensor Node SHOULD be a small embedded device.
+It MUST collect any data about the surrounding environment.
 
 ###### Payment Node
 
 A Payment Node SHOULD be a small embedded device. 
 It MUST accepts IOTA payments and MUST provide some service or access to goods.
 
+###### Area Width
+
+Every Node Group MUST have a Area Width.
+The Area Width MUST be the longest distance between two Nodes within a Node Group.
+The Area Width MUST be a circle.
+
 ###### Node Group
 
 A Node Group MUST be group of Sensor- or Payment Nodes. 
-They MUST fulfil the same or similar purpose. They MUST be within physical limited area.
+They MUST fulfil the same or similar purpose. 
+All Nodes within a Node Group MUST be in an Area Width.
 
 ###### Node Group Member
 
-A Node Group Member MUST be a Node within a Node Group.
+A Node Group Member SHALL be the name of a Node within a Node Group.
 
 ###### Seed Node
 
 A Seed Node MUST be a Node within a Node Group. 
 It MUST holds the configuration for new Node Group Members. 
-It is also MUST be responsible for collecting the status of the Node Group for a Gateway.
+It is also MUST be responsible for collecting the status of the Node Group for a IOTA Gateway.
 
-###### WorkerNode
+###### Worker Node
 
-A WorkerNode MUST be Node Group Member which is not a Seed Nodes.
+A Worker Node MUST be Node Group Member which is not a Seed Nodes.
 
 
 ###### Node Group Neighbor
 
-All other Nodes MUST be called Node Group Neighbor.
+All other Nodes within a Node Group SHALL be called Node Group Neighbor.
 
-### Gateway
+### IOTA Gateway
 
-A Gateway MUST be on physical device. 
-A Gateway SHOULD be a more powerful embedded device. 
-It SHALL give a Node Group Member indirect access or direct to the tangle.
+A IOTA Gateway SHOULD be a more powerful embedded device. 
+A IOTA Gateway SHALL give a Node Group Member indirect access or direct to the tangle.
 
 ### Status Codes
 
 ###### HEALTHY
 
-The Status HEALTHY MUST return by Node, if  everything operates like expected.
+The Status HEALTHY MUST return by Node, if everything operates in the specified way.
 
 ###### DEAD
 
@@ -103,7 +114,8 @@ The Status BROKEN MUST return by a Node, if the Node is still available but not 
 
 ###### IOTA Address
 
-An IOTA Address MUST be the address which is used on the Iota tangle.
+An IOTA Address MUST be the ternary char presentation of an address which is used on the IOTA tangle.
+Once generated and IOTA address MUST be saved persistent on a Node.
 
 ###### IOTA Transaction
 
@@ -114,8 +126,10 @@ A IOTA Transaction MUST, at least, contain the following properties:
 
 ###### IOTA Address Milestone
 
-A IOTA Address Milestone MUST be an ID for a given Iota Address which SHOULD be set by a Gateway. 
+An IOTA Address Milestone MUST be an ID for a given IOTA Address which SHOULD be set by a IOTA Gateway. 
 It SHALL NOT be set by a Node Group Member.
+An IOTA Address Milestone SHALL be only contain A-Z & 0-9.
+The IOTA Gateway MUST save the IOTA Address Milestones persistently.
 
 ###### Seed Key
 
@@ -124,12 +138,12 @@ It is also known just as seed in the IOTA specifications.
 
 ### Communication
 
-#### Gateway
+#### IOTA Gateway
 
 ###### Health Status Request
-
-A Health Status Request MUST be a regular request which a Gateway sends. 
-It MUST be used by a Gatway to get the health of a Node Group.
+ 
+A Health Status Request MUST be used by a IOTA Gateway to get the health of a Node Group.
+An IOTA Gateway MUST send the Health Status Request in an interval.
 
 ###### Health Status Response
 
@@ -138,8 +152,8 @@ The Health Status Response MUST contain the following information:
 
 ###### Status Refresh Request
 
-A Status Refresh Request MUST be a regular request which a Gateway sends. 
-It MUST be used by a Gatway to get information about the Node Group.
+A Status Refresh Request MUST be used by a IOTA Gateway to get information about the Node Group.
+An IOTA Gateway MUST send the Status Refresh Request in an interval.
 
 ###### Status Refresh Response
 
@@ -153,7 +167,7 @@ The Status Refresh Response MUST contain the following information:
 
 ###### IOTA Address Transactions Update Request
 
-A IOTA Address Transactions Update Request SHALL be send by a Node which is interested in a new transaction. 
+An IOTA Address Transactions Update Request SHALL be send by a Node which is interested in a new transaction. 
 It MUST , at least, contain the following information:
 - Latest Milestone
 
@@ -163,29 +177,32 @@ It MUST , at least, contain the following information:
 
 Nodes SHALL communicate peer to peer within their Node Group. 
 Nodes within one Node Group SHALL NOT be able to communicate with Members of another Node Group. 
-Each Node Group Member MUST also able communicate to one or more Gateway.
+Each Node Group Member MUST also be able communicate to one or more IOTA Gateway.
 
-##### Gateway <-> IOTA Tangle
+##### IOTA Gateway <-> IOTA Tangle
 
-A Gateway MUST subscribe to the transaction feed of all known IOTA Addresses. 
-The Gatway MUST receive all of the incoming transactions to these IOTA Addresses. 
-The Gateway MUST cache these transactions. 
-A Gateway SHALL NOT forward these transactions directly to the Node Group. 
+An IOTA Gateway MUST subscribe to the transaction feed of all known IOTA Addresses. 
+The IOTA Gateway MUST receive all incoming transactions of these IOTA Addresses. 
+The IOTA Gateway MUST cache these transactions.
+The IOTA Gateway SHOULD delete the entry in the cache after a quorum of Node Group Members received the transaction.
+An IOTA Gateway SHALL NOT forward these transactions directly to the Node Group. 
 It MUST wait for a Address Transactions Update Request.
 
-##### Gateway <-> Node Group Member communication
+##### IOTA Gateway <-> Node Group Member communication
 
 ###### Health Status Requests
 
-A Gatway SHOULD requests every x seconds the health status of a Node Group. 
-If one Member doesn't respond, it MUST forces the other Node Group Members to get the status of this Node Group Neighbor. 
-The Members MUST respond with their current saved status of this Node Group Member. 
-If, at least, one Node Group Member responses with the status Healthy, the Member MUST NOT marked as Dead. 
-If no Node Group Member responses with a Health status, the Gatway SHOULD retry the Health Status Request. 
+An IOTA Gateway MUST request the Health Status in an interval.
+The IOTA Gateway SHOULD request every Node Group Member for the Health Status.
+If this Member does not respond, it SHOULD forces the other Node Group Members to get the status of this Node Group Neighbor. 
+The Members SHOULD respond with their current saved status of this Node Group Member. 
+If, at least, one Node Group Member responses with the status Healthy, the Member SHOULD NOT marked as Dead. 
+If no Node Group Member responses with a Health status, the IOTA Gateway SHOULD retry the Health Status Request. 
 The retry SHOULD have a timeout and it SHOULD be tried several times before the Node Group Member will marked as Dead.
 
 ###### Status Refresh Requests
-A Gateway SHOULD requests every x seconds the status of a Node Group by its Seed Node. 
+
+An IOTA Gateway SHOULD requests every x seconds the status of a Node Group by its Seed Node. 
 These requests MUST be called Status Refresh Requests. 
 It MUST response one Seed Node. 
 It is OPTIONAL that more Seed Nodes responses.
@@ -195,9 +212,9 @@ It is OPTIONAL that more Seed Nodes responses.
 
 ###### Seed Node Gossip
 
-Every Seed Node MUST request the Seed Node Gossip on a regular base from the other Seed Nodes. 
+Every Seed Node MUST request the Seed Node Gossip in an interval from the other Seed Nodes. 
 It SHOULD do it every x seconds. 
-The node which requests the newest Seed Node Gossip selects a random Seed Node Neighbor. 
+The Node which requests the newest Seed Node Gossip selects a random Seed Node Neighbor. 
 This Seed Node Neighbor SHOULD respond to this request. 
 If it does not respond to this request, SHOULD be marked as DEAD. 
 The Seed Node Gossip Response MUST contain the following information:
@@ -215,10 +232,10 @@ The Seed Node which is not responding MUST mark, eventually, as DEAD if it is no
 
 ###### Node Group Member Gossip
 
-Every Node Group Member MUST request the Node Group Member Gossip on a regular base. 
+Every Node Group Member MUST request the Node Group Member Gossip in an interval. 
 A Node which requests the Node Group Member Gossip MUST select a Node Group Neighbor randomly. 
 This Node Group Neighbor SHOULD respond to this request. 
-If it doesn't respond, it SHOULD be marked as DEAD. 
+If it does not respond, it SHOULD be marked as DEAD. 
 The Node Group Member Gossip MUST contains the following information:
 - Latest known transactions since the last milestone.
 - Latest known milestone.
@@ -234,7 +251,7 @@ The Node Group Member which is not responding MUST mark, eventually, as DEAD if 
 
 ###### Worker Node Gossip
 
-Every Worker Node MUST request a Seed Node on a regular base. 
+Every Worker Node MUST request a Seed Node in an interval. 
 The Seed Node MUST selected randomly. 
 The Seed Node SHOULD respond. 
 If the Seed Node does not respond, 
@@ -245,28 +262,28 @@ The response of a Seed Node MUST contain the following information:
 
 #### Node Group Member Registration
 
-###### Add a WorkerNode to an existing Node Group
+###### Add a Worker Node to an existing Node Group
 
-If a new WorkerNode gets added to an existing Node Group, it MUST request a list of all existing Seed Nodes by a Gateway.
+If a new Worker Node gets added to an existing Node Group, it MUST request a list of all existing Seed Nodes by a IOTA Gateway.
 It MUST communicate to this given Seed Nodes and MUST gives them all necessary information to operate within the Node Group. 
-At least one Seed Node MUST response with all necassary information for the new added Node Group WorkerNode.
-At least one Seed Node MUST also response with a list of all existing WorkerNode of the Node Group.
+At least one Seed Node MUST response with all necassary information for the new added Node Group Worker Node.
+At least one Seed Node MUST also response with a list of all existing Worker Node of the Node Group.
 
 
 ###### Creation of a new Node Group
 
-A new Node Group MUST be added to a Gateway. A new Node Group MUST NOT be created by a Node itself. 
+A new Node Group MUST be added to a IOTA Gateway. A new Node Group MUST NOT be created by a Node itself. 
 The first Member of a new created Node Group MUST be a Seed Node. 
-The Member of the created Node Group MUST request a Gateway for initial configuration.
+The Member of the created Node Group MUST request a IOTA Gateway for initial configuration.
 
 ###### Add a new Seed Node
 
-Like the creation of a new Node Group, a Seed Node MUST be added to a Node Group through a Gateway. 
-After adding a new Seed Node to a Gateway, the new added Seed Node MUST get the initial configuration by a Gatway. 
+Like the creation of a new Node Group, a Seed Node MUST be added to a Node Group through an IOTA Gateway. 
+After adding a new Seed Node to a IOTA Gateway, the new added Seed Node MUST get the initial configuration by a IOTA Gateway. 
 It MUST also register itself to all of its Node Group Neighbor Seed Nodes. 
 It MUST provide all necessary information to operate within the Node Group. 
 The already active Seed Nodes MUST receiving the request of the new Seed Node. 
-They MUST request a Gatway for the new Node Group NodeSeed list. 
+They MUST request a IOTA Gateway for the new Node Group NodeSeed list. 
 They MUST check if the new Seed Node is in this list. 
 If the list does not contain the new Seed Node, they MUST retry requesting the seed list. 
 They SHOULD do it x times. They SHOULD do it with a timeout. 
@@ -275,31 +292,41 @@ If the Seed Node is still not in the list, they SHOULD ignore all of the new See
 
 #### Seed Keys
 
-A Seed Key MUST generated by the node itself. 
-It SHALL NOT share this Seed with other nodes. 
+A Seed Key MUST generated by the Node itself. 
+It SHALL NOT share this Seed with other Nodes. 
 It MUST keep this Seed Key secure in its storage. 
+Seed Keys MUST be saved persistent.
 It MUST also keep track of the current used IOTA Address' index.
+
+#### Generation of IOTA Addresses
+
+Since a Seed Key is used to generate IOTA Addresses, the IOTA Address MUST be generated on the Node.
+The Node SHALL NOT share the index of the IOTA Address with other Nodes.
+Generation of IOTA Addresses in chunks is OPTIONAL.
 
 
 #### Receiving an IOTA Address' transactions
 
 The Node Group Member which is interested in an incoming transaction 
-MUST request an addresses transactions since a specific Address Milestone. 
+MUST provide an Address Milestone. 
+The response MUST include all transactions since the given Transaction Milestone. 
 The response MUST contains all new available transactions since the given Address' Milestone. 
 The latest transaction SHALL be marked with the latest Milestone. 
-To get the IOTA Addresses' transactions, the node SHOULD request a Gateway. 
-It is OPTIONAL to request also the Node Group Neighbors. 
-The Member which is interested in an incoming transaction 
-SHOULD use an timeout and SHOULD request the addresses transactions again, if it is still waiting for it. 
-A Node Group Member SHOULD also be able to force its Node Group Neighbors to forword its request to any Gateway. 
-The Gateway or Node Group Neighbors response 
+To get the IOTA Addresses' transactions, the Node SHOULD request a IOTA Gateway. 
+It is OPTIONAL to also request the Node Group Neighbors. 
+The Member which is waiting for a transaction MUST request the transactions in an interval. 
+The interval time SHOULD be higher than 100 ms.
+A Node Group Member SHOULD also be able to force its Node Group Neighbors to forword its request to any IOTA Gateway. 
+The IOTA Gateway or Node Group Neighbors response 
 MUST contain the latest Address Milestone and all transactions between the provided Milestone and the latest. 
 If the Node Group Member was not the initiator of the request, 
 it MUST forewords the information to the Node Group Member which requested the transactions and 
 MUST updates its own transaction database.
 
 
-#### Receiving new addresses
+#### Receiving new IOTA Addresses
+
+The IOTA Gateway SHALL receive new IOTA Addresses by the Node Group Members.
 
 
 ### Access Data, Services or Goods
