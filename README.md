@@ -39,7 +39,7 @@ Every Node MUST have a Node Class.
 
 ###### Node Type
 
-The value SHALL be Seed Node or Worker Node.
+The value SHALL be Seed Node, Worker Node or Temporary Node.
 Every Node MUST have a Node Type.
 
 ###### Node ID
@@ -57,7 +57,8 @@ It MUST collect any data about the surrounding environment.
 ###### Payment Node
 
 A Payment Node SHOULD be a small embedded device. 
-It MUST accepts IOTA payments and MUST provide some service or access to goods.
+A Payment Node is REQUIRED to send or/and accept IOTA payments.
+It SHOULD give access to services or goods.
 
 ###### Area Width
 
@@ -79,11 +80,16 @@ A Node Group Member SHALL be the name of a Node within a Node Group.
 
 A Seed Node MUST be a Node within a Node Group. 
 It MUST holds the configuration for new Node Group Members. 
-It is also MUST be responsible for collecting the status of the Node Group for a IOTA Gateway.
+It is also MUST be responsible for collecting the status of the Node Group for an IOTA Gateway.
 
 ###### Worker Node
 
 A Worker Node MUST be Node Group Member which is not a Seed Nodes.
+
+###### Temporary Node
+
+A Temporary Node MUST be temporary member in a node group. 
+It SHALL not be a member for longer than x minutes.
 
 
 ###### Node Group Neighbor
@@ -95,7 +101,31 @@ All other Nodes within a Node Group SHALL be called Node Group Neighbor.
 A IOTA Gateway SHOULD be a more powerful embedded device. 
 A IOTA Gateway SHALL give a Node Group Member indirect access or direct to the tangle.
 
-### Status Codes
+### Group Status Codes
+
+###### HEALTHY
+
+The Status HEALTHY MUST return by a Seed Node, if everything operates in the specified way.
+
+###### DEAD
+
+The Status DEAD MUST return by a Seed Node if all Node Group Members are DEAD.
+
+###### PARTIALLY_BROKEN
+
+The Status PARTIALLY_BROKEN MUST return by a Seed Node, if the status of, at least one, Node Group Member is BROKEN or DEAD.
+
+###### QUORUM_BROKEN
+
+The Status QUORUM_BROKEN MUST return by a Seed Node, if the status of a quourum count of Node Group Members is BROKEN.
+
+###### QUORUM_DEAD
+
+The Status QUORUM_DEAD MUST return by a Seed Node, if the status of a quourum count of Node Group Members is DEAD. 
+QUORUM_DEAD MUST overrule the status QUORUM_BROKEN.
+
+
+### Node Status Codes
 
 ###### HEALTHY
 
@@ -103,12 +133,13 @@ The Status HEALTHY MUST return by Node, if everything operates in the specified 
 
 ###### DEAD
 
-The Status DEAD MUST return by a Nodes Node Group Neighbors, 
+The Status DEAD MUST return by a Nodes Node Group Neighbors for a Node Group Member, 
 if they cannot contact this Node Group Member directly or indirect anymore.
 
 ###### BROKEN
 
 The Status BROKEN MUST return by a Node, if the Node is still available but not able to fulfil its purpose.
+
 
 ### IOTA Tangle Network
 
