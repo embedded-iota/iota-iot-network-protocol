@@ -1,4 +1,4 @@
-# Specification for a network of embedded devices with IOTA as payment solution
+# Specifications for IINP: IOTA IoT Network Protocol
 
 ![Network architecture](./architecture.png)
 
