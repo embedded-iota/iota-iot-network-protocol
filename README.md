@@ -1,4 +1,4 @@
-# Specifications for IINP: IOTA IoT Network Protocol
+# Specifications for IINP: IOTA IoT network protocol
 
 ![Network architecture](./architecture.png)
 
