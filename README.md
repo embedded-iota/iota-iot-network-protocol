@@ -98,6 +98,11 @@ All other Nodes within a Node Group SHALL be called Node Group Neighbor.
 A IOTA Gateway SHOULD be a more powerful embedded device. 
 A IOTA Gateway SHALL give a Node Group Member indirect access or direct to the tangle.
 
+### Node Group Control Agent
+
+A Node Group Control Agent SHOULD be a more powerful embedded device or it SHOULD be a server.
+It MUST manage one or more Node Groups.
+
 ### Group Status Codes
 
 ###### HEALTHY
