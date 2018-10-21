@@ -13,11 +13,6 @@ and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119]
 In sense of the CAP theorem, this specification prefers availability and partion tolerance over consistency. 
 It is designed to be eventual consistent.
 
-### Routing
-
-This specification prefers Content Centric Networking for network purposes, 
-but can also used with a traditional TCP/IP stack or other network-layer solutions like 6LoWPAN.
-
 ### Usage of the Specifications
 
 This Specification is UNSTABLE. It SHALL not be used for production implementations.
