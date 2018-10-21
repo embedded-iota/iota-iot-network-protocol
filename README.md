@@ -1,6 +1,6 @@
 # Specification for a network of embedded devices with IOTA as payment solution
 
-![Network architecture](https://raw.githubusercontent.com/embedded-iota/network-specification/master/architecture.png)
+![Network architecture](./architecture.png)
 
 ## Preconditions
 
